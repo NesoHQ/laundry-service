@@ -1,0 +1,16 @@
+# Create new user
+POST http://localhost:5500/users/register
+Content-Type: application/json
+
+{
+    "username":"torik",
+    "email":"torik@gmail.com",
+    "password":"123456",
+    "role":"user"
+}
+
+### 
+
+# See list of users
+GET http://localhost:5500/users?limit=2&page=2
+Content-Type: application/json
