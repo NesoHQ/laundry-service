@@ -4,6 +4,7 @@ import "time"
 
 type User struct {
 	Id        int       `json:"id" db:"id"`
+	Uuid      string    `json:"unique_id" db:"unique_id" validate:"required,unique"`
 	UserName  string    `json:"username" validate:"required" db:"username"`
 	Email     string    `json:"email" validate:"required,email" db:"email"`
 	Password  string    `json:"password" validate:"required" db:"password"`

@@ -31,12 +31,12 @@ func (h *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	user, err := h.srv.Find(requestBody.Email, requestBody.Password)
 	if err != nil {
-		http.Error(w, "User not found", http.StatusNotFound)
+		http.Error(w, "invalid credential", http.StatusNotFound)
 		return
 	}
 
 	payload := utils.Payload{
-		Sub:      user.Id,
+		Uuid:     user.Uuid,
 		UserName: user.UserName,
 		Email:    user.Email,
 		Role:     user.Role,

@@ -7,6 +7,7 @@ import (
 	"strconv"
 
 	"github.com/enghasib/laundry_service/config"
+	"github.com/enghasib/laundry_service/rest/handlers/shop"
 	"github.com/enghasib/laundry_service/rest/handlers/user"
 	middleware "github.com/enghasib/laundry_service/rest/middlewares"
 )
@@ -14,12 +15,14 @@ import (
 type server struct {
 	cnf         *config.Config
 	userHandler user.UserHandler
+	shopHandler shop.ShopHandler
 }
 
-func NewServer(cnf config.Config, userHandler user.UserHandler) *server {
+func NewServer(cnf config.Config, userHandler user.UserHandler, shopHandler shop.ShopHandler) *server {
 	return &server{
 		cnf:         &cnf,
 		userHandler: userHandler,
+		shopHandler: shopHandler,
 	}
 }
 
@@ -32,6 +35,7 @@ func (svr *server) Start() {
 	wrappedMuxWitMiddleware := middlewareManager.Apply(mux)
 
 	svr.userHandler.UserRoute(mux, middlewareManager)
+	svr.shopHandler.ShopRoute(mux, middlewareManager)
 
 	serverPort := ":" + strconv.Itoa(svr.cnf.HttpPort)
 	fmt.Println("Server is running on port:5500")

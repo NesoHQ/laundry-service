@@ -9,18 +9,18 @@ import (
 )
 
 type UserResponse struct {
-	Message  string `json:"message"`
-	ID       int    `json:"id"`
-	UserName string `json:"username"`
-	Email    string `json:"email"`
-	Role     string `json:"role"`
+	Message   string `json:"message"`
+	ID        int    `json:"id"`
+	Unique_id string `json:"unique_id"`
+	UserName  string `json:"username"`
+	Email     string `json:"email"`
+	Role      string `json:"role"`
 }
 
 type createUserRequest struct {
 	UserName string `json:"username"`
 	Email    string `json:"email"`
 	Password string `json:"password"`
-	Role     string `json:"role"`
 }
 
 // create product
@@ -38,7 +38,6 @@ func (h *UserHandler) CreateUserHandler(w http.ResponseWriter, r *http.Request) 
 		UserName: newUser.UserName,
 		Email:    newUser.Email,
 		Password: newUser.Password,
-		Role:     newUser.Role,
 	})
 
 	if err != nil {
@@ -48,11 +47,12 @@ func (h *UserHandler) CreateUserHandler(w http.ResponseWriter, r *http.Request) 
 
 	// mount and encode with response
 	utils.SendResponse(w, http.StatusCreated, UserResponse{
-		Message:  "User created Successfully!",
-		ID:       user.Id,
-		UserName: user.UserName,
-		Email:    user.Email,
-		Role:     user.Role,
+		Message:   "User created Successfully!",
+		ID:        user.Id,
+		Unique_id: user.Uuid,
+		UserName:  user.UserName,
+		Email:     user.Email,
+		Role:      user.Role,
 	})
 
 }
