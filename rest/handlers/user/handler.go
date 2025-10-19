@@ -8,13 +8,13 @@ import (
 type UserHandler struct {
 	middleware middleware.Middlewares
 	cnf        *config.Config
-	srv        Service
+	srv        UserService
 }
 
 func NewUserHandler(
 	middlewares *middleware.Middlewares,
 	cnf *config.Config,
-	srv Service,
+	srv UserService,
 ) *UserHandler {
 	return &UserHandler{
 		middleware: *middlewares,

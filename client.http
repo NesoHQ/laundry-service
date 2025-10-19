@@ -1,16 +1,75 @@
+@auth_token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfaWQiOiJhYjMzZGRiYy1jMDQ0LTQ2OWMtYmNmZC01MDRlYTc3OTljMDAiLCJ1c2VybmFtZSI6Imhhc2liIiwiZW1haWwiOiJoYXNpYkBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4ifQ.PGUXbRP6ybgGl0_z9dQIvKzuTJ0_gDwA_JYIsW5VJC4
+@host = localhost
+@content-Type = application/json
+@port = 5500
 # Create new user
-POST http://localhost:5500/users/register
-Content-Type: application/json
+###
+POST http://{{host}}:{{port}}/users/register
+Content-Type: {{content-Type}}
 
 {
-    "username":"torik",
-    "email":"torik@gmail.com",
+    "username":"soroar",
+    "email":"soroar@gmail.com",
     "password":"123456",
-    "role":"user"
+    "role":"admin"
 }
 
 ### 
-
 # See list of users
-GET http://localhost:5500/users?limit=2&page=2
-Content-Type: application/json
+GET http://{{host}}:{{port}}/users?limit=0&page=0
+Content-Type: {{content-Type}}
+
+###
+# login user
+POST http://{{host}}:{{port}}/users/login
+Content-Type: {{content-Type}} 
+
+{
+    "email":"hasib@gmail.com",
+    "password":"123456"
+}
+
+###
+# Create new shop
+POST http://{{host}}:{{port}}/shops
+Content-Type: {{content-Type}}
+Authorization: Bearer {{auth_token}}
+
+{
+    "name": "Laundry Shop",
+    "location": "256 Gulshan, Dhaka",
+    "contact": "+8801712345678",
+    "payment_details": "01712345678",
+    "shop_owner": "torik@gmail.com"
+}
+
+###
+# See list of shops
+GET http://{{host}}:{{port}}/shops?limit=0&page=0
+Content-Type: {{content-Type}}
+Authorization: Bearer {{auth_token}}
+
+###
+# Update shop info
+PUT http://{{host}}:{{port}}/shops/f76bc28f-bed2-4d08-802e-bf86792ce938
+Content-Type: {{content-Type}}
+Authorization : Bearer {{auth_token}}
+
+{
+    "name": "Updated Laundry Shop",
+    "location": "Updated 256 Gulshan, Dhaka",
+    "contact": "+8801712345679",
+    "payment_details": "01712345679"
+}
+
+###
+# Get single shop info
+GET http://{{host}}:{{port}}/shops/f76bc28f-bed2-4d08-802e-bf86792ce938
+Content-Type: {{content-Type}}
+Authorization : Bearer {{auth_token}}
+
+###
+# Delete a shop
+DELETE http://{{host}}:{{port}}/shops/f76bc28f-bed2-4d08-802e-bf86792ce938
+Content-Type: {{content-Type}}
+Authorization : Bearer {{auth_token}}
