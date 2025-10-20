@@ -1,218 +1,254 @@
 # Feature: User Authentication
 
 ## Problem Solved
-Users and admins need a secure and easy way to access the system to manage laundry services and orders.
+Unauthenticated users cannot place or track laundry orders securely.
 
 ## Solution Overview
-Implements secure registration and login using email or social accounts, storing hashed passwords and generating secure tokens.
+Provides secure login and registration for users and admins using email and password authentication.
 
 ## User Flow
-1. User signs up using email or social login (Google/Facebook).
-2. System validates credentials and stores securely.
-3. User receives authentication token for future requests.
+1. User registers with email or social login.
+2. User logs in with credentials.
+3. System verifies token/session for every protected request.
 
 ## Technical Details
-- **Implementation**: Node.js + Express with JWT-based auth.
-- **Dependencies**: bcrypt, jsonwebtoken, express-validator.
-- **Non-Functional**: Encrypted passwords, HTTPS enforced.
+- **Implementation**: Go net/http handlers with JWT or cookie-based authentication.
+- **Dependencies**: None (no third-party library).
+- **Non-Functional**: Passwords hashed using bcrypt or SHA-256 + salt; uses HTTPS.
 
 ## Acceptance Criteria
-- [ ] Users can register/login successfully.
-- [ ] Tokens are valid and expire correctly.
-- [ ] Unauthorized users cannot access protected endpoints.
+- [x] Registration and login endpoints working.
+- [x] Only authenticated users can access protected routes.
 
 ## Status & Roadmap
 - **Current**: Planned.
 - **Version**: MVP v0.1.
-- **Next**: Add social login integrations.
+- **Next**: Add token refresh feature.
 
 ## Contribution Notes
-Help wanted for OAuth integrations. See CONTRIBUTING.md.
+Help wanted for token middleware improvements.
+
 ---
 
 # Feature: User Management
 
 ## Problem Solved
-Admin needs to manage users and laundry shops efficiently from a central interface.
+Admin needs to manage users and shops centrally.
 
 ## Solution Overview
-Provides admin tools to create, update, and delete users and shops, with role-based access control.
+Allows the admin to create, update, delete, and view users or shops.
 
 ## User Flow
 1. Admin logs in.
-2. Admin views user/shop lists.
-3. Admin performs CRUD operations.
+2. Admin views user/shop list.
+3. Admin performs CRUD actions.
 
 ## Technical Details
-- **Implementation**: REST API routes with role-based middleware.
-- **Dependencies**: express, prisma or mongoose.
-- **Non-Functional**: Secure authorization; fast response (<2s).
+- **Implementation**: Admin-only endpoints using Go net/http.
+- **Dependencies**: PostgreSQL for data storage.
+- **Non-Functional**: Role-based access control.
 
 ## Acceptance Criteria
-- [ ] Admin can create/update/delete users and shops.
-- [ ] Unauthorized users can’t access admin endpoints.
+- [x] Admin can CRUD users and shops.
+- [x] Unauthorized users cannot access admin routes.
 
 ## Status & Roadmap
 - **Current**: Planned.
 - **Version**: MVP v0.1.
-- **Next**: Add bulk import/export feature.
+- **Next**: Add activity logging.
 
 ## Contribution Notes
-Contributors can extend admin dashboards or add logging.
+Seeking improvements for RBAC middleware.
+
 ---
 
 # Feature: Shop Management
 
 ## Problem Solved
-Laundry shop owners need a way to manage their offered services and view users who ordered from them.
+Each laundry shop must manage its own services and customers.
 
 ## Solution Overview
-Allows authenticated shop accounts to define services, pricing, and manage customer lists.
+Enables laundry shops to define their services, pricing, and customer management.
 
 ## User Flow
-1. Shop owner logs in.
-2. Adds or updates available laundry services.
-3. Views customer list and order details.
+1. Shop logs in.
+2. Shop adds or edits available laundry services.
+3. Shop views and manages user orders.
 
 ## Technical Details
-- **Implementation**: CRUD endpoints for shop services and profiles.
-- **Dependencies**: express, database ORM.
-- **Non-Functional**: Scalable for multi-shop support.
+- **Implementation**: HTTP routes for CRUD service management.
+- **Dependencies**: PostgreSQL (tables: shops, services).
+- **Non-Functional**: Optimized queries with indexing.
 
 ## Acceptance Criteria
-- [ ] Shop can list, update, and delete services.
-- [ ] Shop can view associated users and orders.
+- [ ] Shops can create and edit services.
+- [ ] Shop data linked correctly with orders.
 
 ## Status & Roadmap
 - **Current**: Planned.
 - **Version**: MVP v0.1.
-- **Next**: Add revenue analytics per shop.
+- **Next**: Add analytics dashboard.
 
 ## Contribution Notes
-Looking for contributors for shop analytics.
+Need optimization suggestions for Postgres schema.
+
 ---
 
-# Feature: Product & Order Management
+# Feature: Order Management
 
 ## Problem Solved
-Users need to order multiple laundry items, track progress, and manage delivery efficiently.
+Users need to order multiple laundry services and track progress.
 
 ## Solution Overview
-Enables users to create, view, and manage laundry orders with real-time status updates.
+Provides order creation, tracking, updating, and cancellation functionality.
 
 ## User Flow
-1. User browses nearby laundry shops.
-2. Adds items (with image) to an order.
-3. Submits order and tracks progress until delivery.
+1. User selects services and uploads images.
+2. User places order.
+3. System updates order status automatically (collected → in process → completed).
+4. User can cancel before “in process”.
 
 ## Technical Details
-- **Implementation**: RESTful endpoints for orders and products.
-- **Dependencies**: multer (for image upload), database ORM.
-- **Non-Functional**: Orders processed within 2s.
+- **Implementation**: Order and status APIs using Go handlers.
+- **Dependencies**: PostgreSQL (orders, order_items tables).
+- **Non-Functional**: Atomic DB transactions for order consistency.
 
 ## Acceptance Criteria
-- [ ] Orders have unique IDs and statuses.
-- [ ] Users can track and cancel eligible orders.
-- [ ] Laundry can update status in real time.
+- [ ] Users can place and cancel orders.
+- [ ] Order status transitions follow defined logic.
 
 ## Status & Roadmap
 - **Current**: Planned.
 - **Version**: MVP v0.1.
-- **Next**: Add push notifications for status updates.
+- **Next**: Add automated notifications.
 
 ## Contribution Notes
-Contributors can improve tracking or notifications.
+Help wanted for status transition logic testing.
+
+---
+
+# Feature: Image Upload
+
+## Problem Solved
+Users need to attach photos of their clothes for identification.
+
+## Solution Overview
+Handles secure image upload and validation.
+
+## User Flow
+1. User selects image file.
+2. System validates format and size.
+3. System stores image securely (local directory or cloud).
+
+## Technical Details
+- **Implementation**: Go file upload endpoint using multipart/form-data.
+- **Dependencies**: Standard library (no third party).
+- **Non-Functional**: Max size limit, file type whitelist (JPEG, PNG).
+
+## Acceptance Criteria
+- [ ] Valid images are stored successfully.
+- [ ] Invalid formats are rejected with error message.
+
+## Status & Roadmap
+- **Current**: Planned.
+- **Version**: MVP v0.1.
+- **Next**: Add image compression.
+
+## Contribution Notes
+Testing volunteers needed for upload validation.
+
 ---
 
 # Feature: Payment System
 
 ## Problem Solved
-Users need a convenient and secure way to pay for laundry services.
+Users need a way to pay for laundry services.
 
 ## Solution Overview
-Provides both cash-on-delivery and mobile financial service (MFS) payment options.
+Allows users to choose between cash or MFS (mobile financial services) payment methods.
 
 ## User Flow
-1. User selects payment method (Cash or MFS).
-2. Completes payment confirmation.
-3. Order marked as “Paid” in the system.
+1. User places an order.
+2. User selects payment method.
+3. System marks payment status upon confirmation.
 
 ## Technical Details
-- **Implementation**: Payment gateway integration (Bkash/Nagad).
-- **Dependencies**: payment SDKs or REST APIs.
-- **Non-Functional**: Secure transaction validation.
+- **Implementation**: Go payment handler with transaction records.
+- **Dependencies**: PostgreSQL for payment table.
+- **Non-Functional**: Transaction integrity, secure record storage.
 
 ## Acceptance Criteria
+- [ ] Users can select payment method.
 - [ ] Payment status updates correctly.
-- [ ] System handles failed or pending payments.
 
 ## Status & Roadmap
 - **Current**: Planned.
 - **Version**: MVP v0.1.
-- **Next**: Integrate automatic MFS payment confirmation.
+- **Next**: Add payment gateway integration.
 
 ## Contribution Notes
-PRs welcome for payment gateway integration.
----
+Open for MFS integration contributors.
 
-# Feature: Drop & Delivery Management
-
-## Problem Solved
-Users require flexibility in how they send and receive their laundry.
-
-## Solution Overview
-Supports home collection, self-drop, and scheduled delivery options.
-
-## User Flow
-1. User chooses pickup or drop option.
-2. System schedules collection/delivery.
-3. User receives notification upon completion.
-
-## Technical Details
-- **Implementation**: Scheduler service + route management.
-- **Dependencies**: cron jobs, map APIs.
-- **Non-Functional**: <2s scheduling response.
-
-## Acceptance Criteria
-- [ ] Users can select drop/delivery mode.
-- [ ] Laundry can update collection/delivery status.
-
-## Status & Roadmap
-- **Current**: Planned.
-- **Version**: MVP v0.1.
-- **Next**: Add location tracking on maps.
-
-## Contribution Notes
-Need help integrating Google Maps API.
 ---
 
 # Feature: Review System
 
 ## Problem Solved
-Users need to share feedback to improve service quality and trust.
+Customers need to share feedback after completing an order.
 
 ## Solution Overview
-Allows verified users to post reviews after completing orders.
+Allows verified customers to post reviews for completed orders.
 
 ## User Flow
-1. User completes order.
-2. Accesses order history and writes a review.
-3. Review displayed on the laundry shop profile.
+1. User completes an order.
+2. User posts a review.
+3. System stores review linked to order and laundry shop.
 
 ## Technical Details
-- **Implementation**: Review API linked with order status.
-- **Dependencies**: express, database ORM.
-- **Non-Functional**: Prevent duplicate or fake reviews.
+- **Implementation**: Go handler for reviews (CRUD).
+- **Dependencies**: PostgreSQL (reviews table).
+- **Non-Functional**: Review posting limited to completed orders.
 
 ## Acceptance Criteria
-- [ ] Only completed orders can post reviews.
-- [ ] Reviews appear under correct shop.
+- [ ] Only completed orders allow reviews.
+- [ ] Reviews linked to correct shop/user.
 
 ## Status & Roadmap
 - **Current**: Planned.
 - **Version**: MVP v0.1.
-- **Next**: Add review ratings and analytics.
+- **Next**: Add rating aggregation.
 
 ## Contribution Notes
-Help needed for moderation or spam detection.
+Need input on average rating calculation.
+
 ---
+
+# Feature: Drop & Delivery Management
+
+## Problem Solved
+Users need flexibility in dropping off or receiving clothes.
+
+## Solution Overview
+Supports both home pickup and self-drop services with tracking.
+
+## User Flow
+1. User selects delivery method during order.
+2. Laundry updates collection and delivery status.
+3. User confirms receipt.
+
+## Technical Details
+- **Implementation**: Delivery scheduling logic using Go handlers.
+- **Dependencies**: PostgreSQL (delivery table).
+- **Non-Functional**: Delivery time estimation field in DB.
+
+## Acceptance Criteria
+- [ ] Users can choose between home pickup or self-drop.
+- [ ] Delivery updates reflect correctly in order status.
+
+## Status & Roadmap
+- **Current**: Planned.
+- **Version**: MVP v0.1.
+- **Next**: Add location-based tracking.
+
+## Contribution Notes
+Looking for design ideas for delivery time algorithm.
