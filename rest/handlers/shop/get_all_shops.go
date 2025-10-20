@@ -7,6 +7,18 @@ import (
 	"github.com/enghasib/laundry_service/utils"
 )
 
+// GetAllShopsHandler godoc
+// @Summary Get all shops
+// @Description Retrieve a list of all shops with pagination
+// @Tags Shop
+// @Accept  json
+// @Produce  json
+// @Param limit query int false "Number of shops to return" default(10)
+// @Param page query int false "Page number" default(1)
+// @Success 200 {object} []domain.Shop
+// @Param Authorization header string true "Bearer"
+// @Failure 400 {object} map[string]string
+// @Router /shops [get]
 func (h *ShopHandler) GetAllShopsHandler(w http.ResponseWriter, r *http.Request) {
 	// Implementation for retrieving all shops
 	query := r.URL.Query()

@@ -23,7 +23,16 @@ type createUserRequest struct {
 	Password string `json:"password"`
 }
 
-// create product
+// CreateUserHandler godoc
+// @Summary Create a new user
+// @Description Create a new user with the provided information.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param request body createUserRequest true "User to create"
+// @Success 201 {object} UserResponse
+// @Failure 400 {object} map[string]string
+// @Router /users/register [post] @Router /users [post]
 func (h *UserHandler) CreateUserHandler(w http.ResponseWriter, r *http.Request) {
 
 	var newUser createUserRequest

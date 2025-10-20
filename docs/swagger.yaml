@@ -1,0 +1,491 @@
+basePath: /
+definitions:
+  domain.Shop:
+    properties:
+      contact:
+        type: string
+      created_at:
+        type: string
+      created_by:
+        type: string
+      id:
+        type: integer
+      location:
+        type: string
+      name:
+        type: string
+      payment_details:
+        type: string
+      shop_owner:
+        type: string
+      unique_id:
+        type: string
+      updated_at:
+        type: string
+    required:
+    - name
+    - unique_id
+    type: object
+  domain.User:
+    properties:
+      create_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      password:
+        type: string
+      role:
+        type: string
+      unique_id:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - unique_id
+    - username
+    type: object
+  shop.createShopRequest:
+    properties:
+      contact_number:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+      payment_details:
+        type: string
+      shop_owner:
+        type: string
+    required:
+    - contact_number
+    - location
+    - name
+    - payment_details
+    type: object
+  shop.shopUpdatableProps:
+    properties:
+      contact:
+        type: string
+      location:
+        type: string
+      name:
+        type: string
+      payment_details:
+        type: string
+      shop_owner:
+        type: string
+    required:
+    - name
+    type: object
+  user.LoginCredential:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  user.UserResponse:
+    properties:
+      email:
+        type: string
+      id:
+        type: integer
+      message:
+        type: string
+      role:
+        type: string
+      unique_id:
+        type: string
+      username:
+        type: string
+    type: object
+  user.createUserRequest:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+      username:
+        type: string
+    type: object
+  user.loginResponse:
+    properties:
+      access_token:
+        type: string
+      message:
+        type: string
+    type: object
+host: localhost:5500
+info:
+  contact:
+    name: API Support
+    url: https://github.com/NesoHQ/laundry-service
+  description: This is a backend API for a laundry service application. It provides
+    endpoints for managing users, orders, and laundry services. The API is built using
+    Go and follows RESTful principles. It includes features such as user authentication,
+    order processing, and service management. The API is designed to be scalable and
+    maintainable, making it suitable for integration with various frontend applications.
+  license:
+    name: Apache 2.0
+  termsOfService: https://github.com/NesoHQ/laundry-service
+  title: Laundry Service Backend API
+  version: "1.0"
+paths:
+  /ping:
+    get:
+      description: This endpoint is used to check the health of the server. It responds
+        with a simple "pong" message.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Ping endpoint
+      tags:
+      - health
+  /shops:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a list of all shops with pagination
+      parameters:
+      - default: 10
+        description: Number of shops to return
+        in: query
+        name: limit
+        type: integer
+      - default: 1
+        description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Bearer
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.Shop'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all shops
+      tags:
+      - Shop
+    post:
+      consumes:
+      - application/json
+      description: Create a shop with necessary details
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Shop to create
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/shop.createShopRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/shop.createShopRequest'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new shop
+      tags:
+      - Shop
+  /shops/{shop_id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a shop by its ID
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Shop ID
+        in: path
+        name: shop_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a shop
+      tags:
+      - Shop
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a shop by its ID
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Shop ID
+        in: path
+        name: shop_id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Shop'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a single shop
+      tags:
+      - Shop
+    put:
+      consumes:
+      - application/json
+      description: Update shop details by its ID
+      parameters:
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Shop ID
+        in: path
+        name: shop_id
+        required: true
+        type: string
+      - description: Shop properties to update
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/shop.shopUpdatableProps'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/domain.Shop'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "403":
+          description: Forbidden
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a shop
+      tags:
+      - Shop
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a paginated list of all users
+      parameters:
+      - description: Page number
+        in: query
+        name: page
+        type: integer
+      - description: Page size
+        in: query
+        name: limit
+        type: integer
+      - description: Bearer <token>
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/domain.User'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get all users
+      tags:
+      - Users
+  /users/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user and return a JWT token.
+      parameters:
+      - description: User login credentials
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.LoginCredential'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/user.loginResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User login
+      tags:
+      - Users
+  /users/register:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user with the provided information.
+      parameters:
+      - description: User to create
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/user.createUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/user.UserResponse'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new user
+      tags:
+      - Users
+swagger: "2.0"

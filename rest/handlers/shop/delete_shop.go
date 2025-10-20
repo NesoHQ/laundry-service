@@ -6,6 +6,19 @@ import (
 	"github.com/enghasib/laundry_service/utils"
 )
 
+// @Summary Delete a shop
+// @Description Delete a shop by its ID
+// @Tags Shop
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Bearer <token>"
+// @Param shop_id path string true "Shop ID"
+// @Success 204 {object} map[string]string
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Failure 403 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /shops/{shop_id} [delete]
 func (h *ShopHandler) DeleteShopHandler(w http.ResponseWriter, r *http.Request) {
 	shopID := r.URL.Path[len("/shops/"):]
 	if shopID == "" {

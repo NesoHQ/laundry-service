@@ -14,8 +14,23 @@ type shopUpdatableProps struct {
 	Location       string `json:"location" db:"location"`
 	ContactNumber  string `json:"contact" db:"contact"`
 	PaymentDetails string `json:"payment_details" db:"payment_details"`
+	ShopOwner      string `json:"shop_owner,omitempty" db:"shop_owner"`
 }
 
+// @Summary Update a shop
+// @Description Update shop details by its ID
+// @Tags Shop
+// @Accept  json
+// @Produce  json
+// @Param Authorization header string true "Bearer <token>"
+// @Param shop_id path string true "Shop ID"
+// @Param request body shopUpdatableProps true "Shop properties to update"
+// @Success 200 {object} domain.Shop
+// @Failure 400 {object} map[string]string
+// @Failure 401 {object} map[string]string
+// @Failure 403 {object} map[string]string
+// @Failure 500 {object} map[string]string
+// @Router /shops/{shop_id} [put]
 func (h *ShopHandler) UpdateShopHandler(w http.ResponseWriter, r *http.Request) {
 	var updatedProps shopUpdatableProps
 
@@ -50,6 +65,7 @@ func (h *ShopHandler) UpdateShopHandler(w http.ResponseWriter, r *http.Request) 
 		Location:       updatedProps.Location,
 		ContactNumber:  updatedProps.ContactNumber,
 		PaymentDetails: updatedProps.PaymentDetails,
+		ShopOwner:      updatedProps.ShopOwner,
 	})
 	if err != nil {
 		utils.SendError(w, http.StatusBadRequest, err.Error())
