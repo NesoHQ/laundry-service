@@ -9,8 +9,8 @@ import (
 )
 
 type LoginCredential struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required"`
 }
 
 type loginResponse struct {
@@ -18,6 +18,16 @@ type loginResponse struct {
 	AccessToken string `json:"access_token"`
 }
 
+// @Summary User login
+// @Description Authenticate a user and return a JWT token.
+// @Tags Users
+// @Accept json
+// @Produce json
+// @Param request body LoginCredential true "User login credentials"
+// @Success 200 {object} loginResponse
+// @Failure 400 {object} map[string]string
+// @Failure 404 {object} map[string]string
+// @Router /users/login [post]
 func (h *UserHandler) LoginUser(w http.ResponseWriter, r *http.Request) {
 
 	var requestBody LoginCredential

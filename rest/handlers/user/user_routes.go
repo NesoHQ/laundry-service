@@ -10,7 +10,7 @@ func (h *UserHandler) UserRoute(mux *http.ServeMux, manager *middleware.Middlewa
 	mux.Handle("POST /users/register", http.HandlerFunc(h.CreateUserHandler))
 	mux.Handle("POST /users/login", http.HandlerFunc(h.LoginUser))
 
-	mux.Handle("GET /users", manager.With(http.HandlerFunc(h.GetAllUserHandler)))
+	mux.Handle("GET /users", manager.With(http.HandlerFunc(h.GetAllUserHandler), h.middleware.Authentication))
 
 	return mux
 }

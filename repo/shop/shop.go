@@ -26,17 +26,21 @@ func NewShopRepo(db *sqlx.DB) ShopRepo {
 
 func (rep *shopRepo) Create(shop domain.Shop) (*domain.Shop, error) {
 
-	var userEmail string
+	var userUniqueId string
 
-	userQuery := `
+	if shop.ShopOwner == "" {
+		userUniqueId = shop.CreatedBy
+	} else {
+		userQuery := `
 		SELECT unique_id FROM users WHERE email=$1
 	`
-	userRow := rep.db.QueryRow(userQuery, shop.ShopOwner)
-	userRow.Scan(&userEmail)
+		userRow := rep.db.QueryRow(userQuery, shop.ShopOwner)
+		userRow.Scan(&userUniqueId)
 
-	if userRow.Err() != nil {
-		fmt.Println("err", userRow.Err())
-		return nil, userRow.Err()
+		if userRow.Err() != nil {
+			fmt.Println("err", userRow.Err())
+			return nil, userRow.Err()
+		}
 	}
 
 	query := `
@@ -63,7 +67,7 @@ func (rep *shopRepo) Create(shop domain.Shop) (*domain.Shop, error) {
 		shop.Location,
 		shop.PaymentDetails,
 		shop.CreatedBy,
-		userEmail,
+		userUniqueId,
 	)
 
 	if row.Err() != nil {
@@ -120,7 +124,9 @@ func (rep *shopRepo) List(limit, page int) ([]*domain.Shop, error) {
 			location,
 			payment_details,
 			created_by,
-			shop_owner
+			shop_owner,
+			created_at,
+			updated_at
 		FROM shops
 		ORDER BY id
 		LIMIT $1 OFFSET $2
@@ -144,6 +150,8 @@ func (rep *shopRepo) List(limit, page int) ([]*domain.Shop, error) {
 			&shop.PaymentDetails,
 			&shop.CreatedBy,
 			&shop.ShopOwner,
+			&shop.CreatedAt,
+			&shop.UpdatedAt,
 		)
 		if err != nil {
 			return nil, err
@@ -155,6 +163,22 @@ func (rep *shopRepo) List(limit, page int) ([]*domain.Shop, error) {
 }
 
 func (rep *shopRepo) Update(shopId string, Shop domain.Shop) (*domain.Shop, error) {
+
+	var shopOwnerUniqueId string
+
+	if Shop.ShopOwner != "" {
+		userQuery := `
+		SELECT unique_id FROM users WHERE email=$1
+	`
+		userRow := rep.db.QueryRow(userQuery, Shop.ShopOwner)
+		userRow.Scan(&shopOwnerUniqueId)
+
+		if userRow.Err() != nil {
+			fmt.Println("err", userRow.Err())
+			return nil, userRow.Err()
+		}
+	}
+
 	query := `
 		UPDATE shops
 		SET
@@ -162,7 +186,8 @@ func (rep *shopRepo) Update(shopId string, Shop domain.Shop) (*domain.Shop, erro
 			location = $2,
 			contact = $3,
 			payment_details = $4
-		WHERE unique_id = $5
+			shop_owner = $5
+		WHERE unique_id = $6
 		RETURNING
 			id,
 			unique_id,
@@ -176,6 +201,7 @@ func (rep *shopRepo) Update(shopId string, Shop domain.Shop) (*domain.Shop, erro
 		Shop.Location,
 		Shop.ContactNumber,
 		Shop.PaymentDetails,
+		shopOwnerUniqueId,
 		shopId,
 	)
 

@@ -53,7 +53,7 @@ func (r *userRepo) Create(user domain.User) (*domain.User, error) {
 	return &user, nil
 }
 
-func (r *userRepo) Get(userId int) (*domain.User, error) {
+func (r *userRepo) Get(userId string) (*domain.User, error) {
 
 	var user *domain.User
 
@@ -113,7 +113,7 @@ func (r *userRepo) Find(email, password string) (*domain.User, error) {
 
 }
 
-func (r *userRepo) Update(id int, user domain.User) (*domain.User, error) {
+func (r *userRepo) Update(userId string, user domain.User) (*domain.User, error) {
 	// for i := range r.userList {
 	// 	if r.userList[i].ID == id {
 	// 		if &user.UserName != nil {
@@ -128,7 +128,7 @@ func (r *userRepo) Update(id int, user domain.User) (*domain.User, error) {
 	return nil, errors.New("update failed")
 }
 
-func (r *userRepo) Delete(userId int) error {
+func (r *userRepo) Delete(userId string) error {
 	// index := -1
 
 	// for i, product := range r.userList {
