@@ -4,6 +4,8 @@ definitions:
     properties:
       contact:
         type: string
+      cover_image:
+        type: string
       created_at:
         type: string
       created_by:
@@ -54,6 +56,8 @@ definitions:
     properties:
       contact_number:
         type: string
+      cover_image:
+        type: string
       location:
         type: string
       name:
@@ -71,6 +75,8 @@ definitions:
   shop.shopUpdatableProps:
     properties:
       contact:
+        type: string
+      cover_image:
         type: string
       location:
         type: string

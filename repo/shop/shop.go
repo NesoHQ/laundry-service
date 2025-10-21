@@ -51,9 +51,10 @@ func (rep *shopRepo) Create(shop domain.Shop) (*domain.Shop, error) {
 			contact,
 			payment_details,
 			created_by,
-			shop_owner
+			shop_owner,
+			cover_image
 		) VALUES(
-			$1, $2, $3, $4, $5, $6, $7
+			$1, $2, $3, $4, $5, $6, $7, $8
 		) 
 		RETURNING id
 	`
@@ -68,6 +69,7 @@ func (rep *shopRepo) Create(shop domain.Shop) (*domain.Shop, error) {
 		shop.PaymentDetails,
 		shop.CreatedBy,
 		userUniqueId,
+		shop.CoverImage,
 	)
 
 	if row.Err() != nil {
@@ -185,9 +187,10 @@ func (rep *shopRepo) Update(shopId string, Shop domain.Shop) (*domain.Shop, erro
 			name = $1,
 			location = $2,
 			contact = $3,
-			payment_details = $4
-			shop_owner = $5
-		WHERE unique_id = $6
+			payment_details = $4,
+			shop_owner = $5,
+			cover_image = $6
+		WHERE unique_id = $7
 		RETURNING
 			id,
 			unique_id,
@@ -202,6 +205,7 @@ func (rep *shopRepo) Update(shopId string, Shop domain.Shop) (*domain.Shop, erro
 		Shop.ContactNumber,
 		Shop.PaymentDetails,
 		shopOwnerUniqueId,
+		Shop.CoverImage,
 		shopId,
 	)
 
