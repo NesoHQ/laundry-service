@@ -556,6 +556,9 @@ const docTemplate = `{
                 "contact": {
                     "type": "string"
                 },
+                "cover_image": {
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -632,6 +635,9 @@ const docTemplate = `{
                 "contact_number": {
                     "type": "string"
                 },
+                "cover_image": {
+                    "type": "string"
+                },
                 "location": {
                     "type": "string"
                 },
@@ -653,6 +659,9 @@ const docTemplate = `{
             ],
             "properties": {
                 "contact": {
+                    "type": "string"
+                },
+                "cover_image": {
                     "type": "string"
                 },
                 "location": {

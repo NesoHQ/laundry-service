@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS shops (
     payment_details TEXT,
     created_by UUID NOT NULL REFERENCES users(unique_id) ON DELETE CASCADE,
     shop_owner UUID NOT NULL REFERENCES users(unique_id) ON DELETE CASCADE,
+    cover_image TEXT,
     created_at TIMESTAMP DEFAULT NOW(),
     updated_at TIMESTAMP DEFAULT NOW()
 );

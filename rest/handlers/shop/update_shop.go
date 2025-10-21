@@ -15,6 +15,7 @@ type shopUpdatableProps struct {
 	ContactNumber  string `json:"contact" db:"contact"`
 	PaymentDetails string `json:"payment_details" db:"payment_details"`
 	ShopOwner      string `json:"shop_owner,omitempty" db:"shop_owner"`
+	CoverImage     string `json:"cover_image,omitempty" db:"cover_image"`
 }
 
 // @Summary Update a shop
@@ -66,6 +67,7 @@ func (h *ShopHandler) UpdateShopHandler(w http.ResponseWriter, r *http.Request) 
 		ContactNumber:  updatedProps.ContactNumber,
 		PaymentDetails: updatedProps.PaymentDetails,
 		ShopOwner:      updatedProps.ShopOwner,
+		CoverImage:     updatedProps.CoverImage,
 	})
 	if err != nil {
 		utils.SendError(w, http.StatusBadRequest, err.Error())

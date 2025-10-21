@@ -9,6 +9,7 @@ type Shop struct {
 	PaymentDetails string `json:"payment_details" db:"payment_details"`
 	CreatedBy      string `json:"created_by" db:"created_by"`
 	ShopOwner      string `json:"shop_owner" db:"shop_owner"`
+	CoverImage     string `json:"cover_image" db:"cover_image"`
 	CreatedAt      string `json:"created_at" db:"created_at"`
 	UpdatedAt      string `json:"updated_at" db:"updated_at"`
 }

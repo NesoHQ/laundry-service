@@ -14,6 +14,7 @@ type createShopRequest struct {
 	ContactNumber  string `json:"contact_number" validate:"required"`
 	PaymentDetails string `json:"payment_details" validate:"required"`
 	ShopOwner      string `json:"shop_owner"`
+	CoverImage     string `json:"cover_image"`
 }
 
 // CreateShopHandler godoc
@@ -52,6 +53,7 @@ func (h *ShopHandler) CreateShopHandler(w http.ResponseWriter, r *http.Request) 
 		PaymentDetails: newShop.PaymentDetails,
 		CreatedBy:      user.Uuid,
 		ShopOwner:      newShop.ShopOwner,
+		CoverImage:     newShop.CoverImage,
 	})
 	if err != nil {
 		utils.SendError(w, http.StatusBadRequest, err.Error())

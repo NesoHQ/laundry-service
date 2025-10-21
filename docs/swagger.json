@@ -550,6 +550,9 @@
                 "contact": {
                     "type": "string"
                 },
+                "cover_image": {
+                    "type": "string"
+                },
                 "created_at": {
                     "type": "string"
                 },
@@ -626,6 +629,9 @@
                 "contact_number": {
                     "type": "string"
                 },
+                "cover_image": {
+                    "type": "string"
+                },
                 "location": {
                     "type": "string"
                 },
@@ -647,6 +653,9 @@
             ],
             "properties": {
                 "contact": {
+                    "type": "string"
+                },
+                "cover_image": {
                     "type": "string"
                 },
                 "location": {
